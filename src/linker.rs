@@ -214,7 +214,8 @@ impl Linker {
 
         let path = CString::new(self.get_output_path()?.to_str().unwrap()).unwrap();
         let arch = CString::new(arch).unwrap();
-        let feature = CString::new("").unwrap();
+        let isa = self.session.ptx_isa_ver.map(|ver| format!("+ptx{}", ver)).unwrap_or_default();
+        let feature = CString::new(isa).unwrap();
 
         unsafe {
             LLVMInitializeNVPTXTargetInfo();

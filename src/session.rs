@@ -34,6 +34,7 @@ pub struct Session {
     pub emit: Vec<Output>,
     pub ptx_archs: Vec<String>,
     pub ptx_fallback_arch: String,
+    pub ptx_isa_ver: Option<usize>,
 }
 
 impl Session {
@@ -90,6 +91,11 @@ impl Session {
     /// Specify the fallback architecture if no other explicitly set.
     pub fn set_fallback_arch(&mut self, arch: &str) {
         self.ptx_fallback_arch = arch.into();
+    }
+
+    /// Specify the ptx isa version (e.g. `60`).
+    pub fn set_isa_ver(&mut self, isa_ver: usize) {
+        self.ptx_isa_ver = Some(isa_ver);
     }
 
     fn is_metadata_bitcode(&self, path: &Path) -> bool {

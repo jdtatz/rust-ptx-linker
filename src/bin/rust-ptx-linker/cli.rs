@@ -79,6 +79,12 @@ fn get_app() -> App<'static, 'static> {
                     .use_delimiter(true)
             },
             {
+                Arg::with_name("isa")
+                    .long("isa")
+                    .help("CUDA PTX isa (instruction set architecture) version")
+                    .takes_value(true)
+            },
+            {
                 Arg::with_name("emit")
                     .short("e")
                     .long("emit")
@@ -145,6 +151,16 @@ fn parse_session(matches: ArgMatches<'static>) -> Session {
 
     if let Some(arch) = matches.value_of("fallback_arch") {
         session.set_fallback_arch(arch);
+    }
+
+    if let Some(isa) = matches.value_of("isa") {
+        if let Ok(isa_ver) = isa.parse() {
+            session.set_isa_ver(isa_ver);
+        } else if let Ok(isa_ver_float) = isa.parse::<f64>() {
+            session.set_isa_ver((isa_ver_float * 10_f64) as usize);
+        } else {
+            warn!("PTX isa version can't be parsed");
+        }
     }
 
     session
